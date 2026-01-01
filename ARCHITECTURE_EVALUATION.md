@@ -1,6 +1,6 @@
 # Architecture Evaluation: Focus Timer with Pomodoro
 
-**Evaluation Date:** 2026-01-01  
+**Evaluation Date:** 2025-01-01  
 **Architecture Score:** **72/100**
 
 ---
@@ -113,16 +113,17 @@ lib/
 **Recommendation:**
 ```dart
 // Use shared_preferences, sqflite, or hive
+// Example with a generic persistence interface:
 class ActivitiesStorage extends ChangeNotifier {
-  final Database _database;
+  final PersistenceService _persistence;
   
   Future<void> loadActivities() async {
-    _activities = await _database.getActivities();
+    _activities = await _persistence.getActivities();
     notifyListeners();
   }
   
   Future<void> addActivity(Activity activity) async {
-    await _database.insertActivity(activity);
+    await _persistence.insertActivity(activity);
     _activities.add(activity);
     notifyListeners();
   }
@@ -140,11 +141,12 @@ class ActivitiesStorage extends ChangeNotifier {
 **Recommendation:**
 ```dart
 // Add tests for critical components
-testWidgets('Timer starts and increments', (tester) async {
+test('Timer increments focus time', () async {
   final controller = TimerController(testActivity);
   controller.startFocusTimer();
-  await Future.delayed(Duration(seconds: 2));
-  expect(controller.activity.focusTimeElapsed, greaterThan(0));
+  await tester.pump(Duration(seconds: 2));
+  expect(controller.activity.focusTimeElapsed, equals(2));
+  controller.dispose();
 });
 ```
 
@@ -182,9 +184,9 @@ class Activity {
   List<Weekday> activeDays;
   
   // Runtime state (should be separate)
-  int focusTimeElapsed = 0;  // ❌ Couples model with runtime
-  int breakTimeElapsed = 0;   // ❌ Couples model with runtime
-  FocusState currentFocusState = FocusState.focus; // ❌ Couples model with runtime
+  int focusTimeElapsed = 0;        // ❌ Couples model with runtime
+  int breakTimeElapsed = 0;        // ❌ Couples model with runtime
+  FocusState currentFocusState = FocusState.focus;  // ❌ Couples model with runtime
 }
 ```
 
