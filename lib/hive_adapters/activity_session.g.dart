@@ -1,0 +1,59 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of '../models/activity_session.dart';
+
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class ActivitySessionAdapter extends TypeAdapter<ActivitySession> {
+  @override
+  final int typeId = 1;
+
+  @override
+  ActivitySession read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ActivitySession(
+      activityId: fields[0] as String,
+      day: fields[1] as DateTime,
+      done: fields[6] as bool,
+      focusTimeElapsed: fields[2] as int,
+      breakTimeElapsed: fields[3] as int,
+      currentFocusState: fields[4] as FocusState,
+      numOfIntervals: fields[5] as int,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, ActivitySession obj) {
+    writer
+      ..writeByte(7)
+      ..writeByte(0)
+      ..write(obj.activityId)
+      ..writeByte(1)
+      ..write(obj.day)
+      ..writeByte(2)
+      ..write(obj.focusTimeElapsed)
+      ..writeByte(3)
+      ..write(obj.breakTimeElapsed)
+      ..writeByte(4)
+      ..write(obj.currentFocusState)
+      ..writeByte(5)
+      ..write(obj.numOfIntervals)
+      ..writeByte(6)
+      ..write(obj.done);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ActivitySessionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

@@ -14,8 +14,6 @@ class ActivityCreationScreen extends StatefulWidget {
 }
 
 class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
-
-
   final List<Color> _colorOptions = [
     Colors.blue,
     Colors.red,
@@ -54,7 +52,9 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(widget.activity == null ? 'Create Activity' : 'Edit Activity'),
+            title: Text(
+              widget.activity == null ? 'Create Activity' : 'Edit Activity',
+            ),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -73,26 +73,14 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
                     decoration: InputDecoration(
                       hintText: 'Activity Name',
                       filled: true,
-                      fillColor: Theme
-                          .of(context)
-                          .colorScheme
-                          .surfaceContainer,
+                      fillColor: Theme.of(context).colorScheme.surfaceContainer,
                     ),
                   ),
-                  const SizedBox(
-                    height: 24,
-                  ),
+                  const SizedBox(height: 24),
                   Text(
                     'Color',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .onSurfaceVariant,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -116,17 +104,14 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
                             border: Border.all(
                               color: isSelected
                                   ? color
-                                  : Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .outlineVariant,
+                                  : Theme.of(
+                                      context,
+                                    ).colorScheme.outlineVariant,
                               width: isSelected ? 3.0 : 1.0,
                             ),
                           ),
                           padding: const EdgeInsets.all(3.0),
-                          child: CircleAvatar(
-                            backgroundColor: color,
-                          ),
+                          child: CircleAvatar(backgroundColor: color),
                         ),
                       );
                     }).toList(),
@@ -134,15 +119,8 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
                   const SizedBox(height: 24),
                   Text(
                     'Active Days',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .onSurfaceVariant,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -170,31 +148,24 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
                     children: [
                       Text(
                         'Time Goal',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(
-                          color: Theme
-                              .of(context)
-                              .colorScheme
-                              .onSurfaceVariant,
-                        ),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
                       ),
                       const Spacer(),
                       Text(
                         '${controller.timeGoal.round()} min',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Slider(
                     value: controller.timeGoal.toDouble(),
-                    min: 15,
+                    min: 5,
                     max: 180,
                     divisions: (180 - 15) ~/ 5,
                     onChanged: (double value) {
@@ -207,22 +178,53 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
               ),
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation
-              .centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
             padding: const EdgeInsets.all(24.0),
             child: SizedBox(
               width: double.infinity,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                onPressed: () {controller.save(context);},
-                child: const Text('Save Activity'),
+              height: 70,
+              child: Row(
+                children: [
+                  widget.activity != null
+                      ? Expanded(
+                          flex: 1,
+                          child: FilledButton(
+                            onPressed: () {
+                              controller.delete(context);
+                              Navigator.pop(context);
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            child: Icon(Icons.delete_forever_rounded),
+                          ),
+                        )
+                      : SizedBox(width: 0),
+                  widget.activity != null
+                      ? const SizedBox(width: 12)
+                      : SizedBox(width: 0),
+                  Expanded(
+                    flex: 4,
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      onPressed: () {
+                        controller.save(context);
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Save Activity'),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         );
-      });
+      },
+    );
   }
 }

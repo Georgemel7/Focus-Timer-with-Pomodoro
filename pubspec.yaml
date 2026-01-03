@@ -36,10 +36,15 @@ dependencies:
   dynamic_color:
   cupertino_icons: ^1.0.8
   provider:
+  hive:
+  hive_flutter:
+  path_provider: ^2.0.15
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator:
+  build_runner:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

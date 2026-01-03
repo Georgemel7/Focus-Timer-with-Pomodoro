@@ -8,10 +8,16 @@ import '../screens/timer_screen.dart';
 
 class ActivityController {
   void editActivity(BuildContext context, Activity activity) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityCreationScreen(activity)));
-  }
-  void goToTimer (BuildContext context, Activity activity) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => TimerScreen(activity)));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ActivityCreationScreen(activity)),
+    );
   }
 
+  void goToTimer(BuildContext context, Activity activity) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TimerScreen(activity)),
+    );
+  }
 }

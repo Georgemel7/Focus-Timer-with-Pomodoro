@@ -1,5 +1,1 @@
-
-enum FocusState {
-  focus,
-  break_,
-}
+enum FocusState { focus, break_ }

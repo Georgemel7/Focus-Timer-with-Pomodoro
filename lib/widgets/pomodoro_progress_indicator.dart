@@ -28,7 +28,6 @@ class PomodoroProgressIndicator extends StatelessWidget {
   }
 }
 
-
 class _PomodoroProgressPainter extends CustomPainter {
   final double progress; // 0.0 - 1.0
   final double segments;
@@ -36,14 +35,11 @@ class _PomodoroProgressPainter extends CustomPainter {
   final double backgroundStrokeWidth = 14;
   final Color color;
 
-
   _PomodoroProgressPainter({
     required this.progress,
     required this.color,
     required this.segments,
   });
-
-
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -55,26 +51,29 @@ class _PomodoroProgressPainter extends CustomPainter {
     final fullCircle = 2 * pi;
     const gapAngle = 0.3; // visual break size
     final segmentAngle =
-        (fullCircle - gapAngle * (finalPartOfSegment != 0 ? fullSegments + 1 : fullSegments)) / segments;
+        (fullCircle -
+            gapAngle *
+                (finalPartOfSegment != 0 ? fullSegments + 1 : fullSegments)) /
+        segments;
     final finalPartOfSegmentAngle = segmentAngle * finalPartOfSegment;
-
 
     final backgroundPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = backgroundStrokeWidth
       ..strokeCap = StrokeCap.round
-      ..color = ColorScheme.fromSeed(seedColor: color).outlineVariant.withOpacity(0.3);
-
+      ..color = ColorScheme.fromSeed(
+        seedColor: color,
+      ).outlineVariant.withOpacity(0.3);
 
     final activePaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = activeStrokeWidth
       ..strokeCap = StrokeCap.round
-      ..color =color;
+      ..color = color;
 
-    double startAngle = 3*pi / 2 + gapAngle /2;
+    double startAngle = 3 * pi / 2 + gapAngle / 2;
 
-    double remainingProgress = 1- progress;
+    double remainingProgress = 1 - progress;
 
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
@@ -86,7 +85,10 @@ class _PomodoroProgressPainter extends CustomPainter {
 
     // active segment
     if (remainingProgress > 0) {
-      final drawAngle =  min (fullCircle * remainingProgress, finalPartOfSegmentAngle);
+      final drawAngle = min(
+        fullCircle * remainingProgress,
+        finalPartOfSegmentAngle,
+      );
 
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
@@ -96,17 +98,10 @@ class _PomodoroProgressPainter extends CustomPainter {
         activePaint,
       );
 
-      remainingProgress -= finalPartOfSegment/segments;
+      remainingProgress -= finalPartOfSegment / segments;
     }
 
     startAngle += finalPartOfSegmentAngle + gapAngle;
-
-
-
-
-
-
-
 
     for (int i = 0; i < fullSegments; i++) {
       // background segment
@@ -120,8 +115,7 @@ class _PomodoroProgressPainter extends CustomPainter {
 
       // active segment
       if (remainingProgress > 0) {
-        final drawAngle =
-        min(segmentAngle, 2*pi * remainingProgress);
+        final drawAngle = min(segmentAngle, 2 * pi * remainingProgress);
 
         canvas.drawArc(
           Rect.fromCircle(center: center, radius: radius),

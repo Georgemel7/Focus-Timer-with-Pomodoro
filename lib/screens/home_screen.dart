@@ -21,29 +21,42 @@ class HomeScreen extends StatelessWidget {
       body: TabBarView(
         children: [
           ListView(
-              padding: const EdgeInsets.all(20),
-              children: dueTodayActivities.map((activity) {
-                final colorScheme = ColorScheme.fromSeed(
-                  seedColor: activity.seedColor,
-                  brightness: brightness,
-                );
-                return ActivityCard(
-                    activity: activity, cardColorScheme: colorScheme);
-              }).toList()),
+            padding: const EdgeInsets.all(20),
+            children: dueTodayActivities.map((activity) {
+              final colorScheme = ColorScheme.fromSeed(
+                seedColor: activity.seedColor,
+                brightness: brightness,
+              );
+              return ActivityCard(
+                activity: activity,
+                cardColorScheme: colorScheme,
+              );
+            }).toList(),
+          ),
           ListView(
-              padding: const EdgeInsets.all(20),
-              children: allActivities.map((activity) {
-                final colorScheme = ColorScheme.fromSeed(
-                  seedColor: activity.seedColor,
-                  brightness: brightness,
-                );
-                return ActivityCard(
-                    activity: activity, cardColorScheme: colorScheme);
-              }).toList()),
+            padding: const EdgeInsets.all(20),
+            children: allActivities.map((activity) {
+              final colorScheme = ColorScheme.fromSeed(
+                seedColor: activity.seedColor,
+                brightness: brightness,
+              );
+              return ActivityCard(
+                activity: activity,
+                cardColorScheme: colorScheme,
+              );
+            }).toList(),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityCreationScreen(null)));},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ActivityCreationScreen(null),
+            ),
+          );
+        },
         child: const Icon(Icons.add_rounded),
       ),
     );

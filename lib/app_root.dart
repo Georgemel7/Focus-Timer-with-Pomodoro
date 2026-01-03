@@ -28,17 +28,16 @@ class _AppRootState extends State<AppRoot> {
     PreferredSizeWidget? appBar;
     if (_selectedIndex == 0) {
       appBar = AppBar(
-        bottom: const TabBar(tabs: <Tab>[
-          Tab(text: 'Due Today'),
-          Tab(text: 'All'),
-        ]),
-        title: const Text(
-          'Foсus Timer',)
+        bottom: const TabBar(
+          tabs: <Tab>[
+            Tab(text: 'Due Today'),
+            Tab(text: 'All'),
+          ],
+        ),
+        title: const Text('Foсus Timer'),
       );
     } else {
-      appBar = AppBar(
-        title: const Text('Statistics'),
-      );
+      appBar = AppBar(title: const Text('Statistics'));
     }
 
     return DefaultTabController(
@@ -48,10 +47,7 @@ class _AppRootState extends State<AppRoot> {
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: NavigationBar(
           destinations: const <Widget>[
-            NavigationDestination(
-              icon: Icon(Icons.home_filled),
-              label: 'Home',
-            ),
+            NavigationDestination(icon: Icon(Icons.home_filled), label: 'Home'),
             NavigationDestination(
               icon: Icon(Icons.bar_chart_rounded),
               label: 'Statistics',

@@ -1,33 +1,35 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
+import '../alert_dialogs/activity_done_dialog.dart';
+import '../data/sessions_storage.dart';
 import '../models/activity.dart';
+import '../models/activity_session.dart';
 import '../models/focus_state.dart';
 import '../models/timer_time_format.dart';
 
 class TimerController extends ChangeNotifier {
-
   final Activity activity;
+  final SessionsStorage sessionsStorage;
+  final BuildContext context;
 
-  TimerController (this.activity);
+  TimerController(this.context, this.activity, this.sessionsStorage);
 
   Timer? _timer;
   bool isFocusRunning = false;
   bool isBreakRunning = false;
-  int focusInterval = 2*60; //in seconds
-  int breakInterval = 1*60; //in seconds
-  int numOfIntervals = 0;
+  int focusInterval = 1 * 60; //in seconds
+  int breakInterval = 1 * 60; //in seconds
   late final int maxNumOfFullIntervals = activity.timeGoal ~/ focusInterval;
   late final int lastIntervalDuration = activity.timeGoal % focusInterval;
 
-
+  late final ActivitySession session = sessionsStorage.getTodaySession(
+    activity,
+  );
 
   bool get isRunning => isFocusRunning || isBreakRunning;
-
-
-
-
 
   @override
   void dispose() {
@@ -35,19 +37,30 @@ class TimerController extends ChangeNotifier {
     super.dispose();
   }
 
+  void saveSession() {
+    sessionsStorage.save(session);
+  }
 
+  void endSession() {
+    session.done = true;
+    saveSession();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ActivityDoneDialog()),
+    );
+  }
 
   void startFocusTimer() {
     if (isFocusRunning) return;
 
     isFocusRunning = true;
-    activity.currentFocusState = FocusState.focus;
-
+    session.currentFocusState = FocusState.focus;
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      activity.focusTimeElapsed++;
+      session.focusTimeElapsed++;
 
-      if (activity.focusTimeElapsed-focusInterval*numOfIntervals >= focusInterval) {
+      if (session.focusTimeElapsed - focusInterval * session.numOfIntervals >=
+          focusInterval) {
         stop();
       }
 
@@ -59,13 +72,12 @@ class TimerController extends ChangeNotifier {
     if (isBreakRunning) return;
 
     isBreakRunning = true;
-    activity.currentFocusState = FocusState.break_;
-
+    session.currentFocusState = FocusState.break_;
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      activity.breakTimeElapsed++;
+      session.breakTimeElapsed++;
 
-      if (activity.breakTimeElapsed >= breakInterval) {
+      if (session.breakTimeElapsed >= breakInterval) {
         stop();
       }
 
@@ -76,38 +88,45 @@ class TimerController extends ChangeNotifier {
   void stop() {
     _timer?.cancel();
     _timer = null;
-    if (activity.currentFocusState == FocusState.focus) {
-      isFocusRunning = false;
-      activity.currentFocusState = FocusState.break_;
-      numOfIntervals++;
-    } else if (activity.currentFocusState == FocusState.break_) {
-      isBreakRunning = false;
-      activity.currentFocusState = FocusState.focus;
-      activity.breakTimeElapsed = 0;
+    isFocusRunning = false;
+    isBreakRunning = false;
+    if (session.focusTimeElapsed == activity.timeGoal) {
+      endSession();
+      notifyListeners();
+      return;
+    }
+    if (session.currentFocusState == FocusState.focus) {
+      session.currentFocusState = FocusState.break_;
+      session.numOfIntervals++;
+    } else if (session.currentFocusState == FocusState.break_) {
+      session.currentFocusState = FocusState.focus;
+      session.breakTimeElapsed = 0;
     }
     notifyListeners();
+    saveSession();
   }
 
   void start() {
-    if (activity.currentFocusState == FocusState.break_) {
+    if (session.currentFocusState == FocusState.break_) {
       startBreakTimer();
-    } else if (activity.currentFocusState == FocusState.focus) {
+    } else if (session.currentFocusState == FocusState.focus) {
       startFocusTimer();
     }
   }
 
-  void pause(){
+  void pause() {
     _timer?.cancel();
     _timer = null;
-    if (activity.currentFocusState == FocusState.focus) {
+    if (session.currentFocusState == FocusState.focus) {
       isFocusRunning = false;
-    } else if (activity.currentFocusState == FocusState.break_) {
+    } else if (session.currentFocusState == FocusState.break_) {
       isBreakRunning = false;
     }
     notifyListeners();
+    saveSession();
   }
 
-  void onButtonPressed(){
+  void onButtonPressed() {
     if (isRunning) {
       pause();
     } else {
@@ -118,19 +137,18 @@ class TimerController extends ChangeNotifier {
 
   double get progress {
     if (activity.timeGoal == 0) return 0;
-    return activity.focusTimeElapsed / activity.timeGoal;
+    return session.focusTimeElapsed / activity.timeGoal;
   }
 
   String get timeLeft {
-    if (activity.currentFocusState == FocusState.focus) {
-      return formatTimeInMS(activity.focusTimeElapsed - focusInterval*numOfIntervals, (numOfIntervals >= maxNumOfFullIntervals) ?  lastIntervalDuration : focusInterval);
+    if (session.currentFocusState == FocusState.focus) {
+      return formatTimeInMS(
+        session.focusTimeElapsed - focusInterval * session.numOfIntervals,
+        (session.numOfIntervals >= maxNumOfFullIntervals)
+            ? lastIntervalDuration
+            : focusInterval,
+      );
     }
-      return formatTimeInMS(activity.breakTimeElapsed, breakInterval);
-
+    return formatTimeInMS(session.breakTimeElapsed, breakInterval);
   }
-
 }
-
-
-
-
