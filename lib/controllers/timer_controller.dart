@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:focus_timer/controllers/app_settings_controller.dart';
+import 'package:provider/provider.dart';
 
 import '../alert_dialogs/activity_done_dialog.dart';
 import '../data/sessions_storage.dart';
 import '../models/activity.dart';
 import '../models/activity_session.dart';
+import '../models/app_settings.dart';
 import '../models/focus_state.dart';
 import '../models/timer_time_format.dart';
 
@@ -18,12 +21,13 @@ class TimerController extends ChangeNotifier {
   TimerController(this.context, this.activity, this.sessionsStorage);
 
   Timer? _timer;
+  late final AppSettings appSettings = context
+      .read<AppSettingsController>()
+      .settings;
   bool isFocusRunning = false;
   bool isBreakRunning = false;
-  int focusInterval = 1 * 60; //in seconds
-  int breakInterval = 1 * 60; //in seconds
-  late final int maxNumOfFullIntervals = activity.timeGoal ~/ focusInterval;
-  late final int lastIntervalDuration = activity.timeGoal % focusInterval;
+  late final int maxNumOfFullIntervals = activity.timeGoal ~/ appSettings.focusInterval;
+  late final int lastIntervalDuration = activity.timeGoal % appSettings.focusInterval;
 
   late final ActivitySession session = sessionsStorage.getTodaySession(
     activity,
@@ -59,8 +63,8 @@ class TimerController extends ChangeNotifier {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       session.focusTimeElapsed++;
 
-      if (session.focusTimeElapsed - focusInterval * session.numOfIntervals >=
-          focusInterval) {
+      if (session.focusTimeElapsed - appSettings.focusInterval * session.numOfIntervals >=
+          appSettings.focusInterval) {
         stop();
       }
 
@@ -77,7 +81,7 @@ class TimerController extends ChangeNotifier {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       session.breakTimeElapsed++;
 
-      if (session.breakTimeElapsed >= breakInterval) {
+      if (session.breakTimeElapsed >= appSettings.breakInterval) {
         stop();
       }
 
@@ -90,7 +94,7 @@ class TimerController extends ChangeNotifier {
     _timer = null;
     isFocusRunning = false;
     isBreakRunning = false;
-    if (session.focusTimeElapsed == activity.timeGoal) {
+    if (session.focusTimeElapsed >= activity.timeGoal) {
       endSession();
       notifyListeners();
       return;
@@ -143,12 +147,12 @@ class TimerController extends ChangeNotifier {
   String get timeLeft {
     if (session.currentFocusState == FocusState.focus) {
       return formatTimeInMS(
-        session.focusTimeElapsed - focusInterval * session.numOfIntervals,
+        session.focusTimeElapsed - appSettings.focusInterval * session.numOfIntervals,
         (session.numOfIntervals >= maxNumOfFullIntervals)
             ? lastIntervalDuration
-            : focusInterval,
+            : appSettings.focusInterval,
       );
     }
-    return formatTimeInMS(session.breakTimeElapsed, breakInterval);
+    return formatTimeInMS(session.breakTimeElapsed, appSettings.breakInterval);
   }
 }

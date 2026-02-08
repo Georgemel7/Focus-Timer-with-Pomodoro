@@ -4,9 +4,11 @@ import 'package:focus_timer/widgets/pomodoro_progress_indicator.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
+import '../controllers/app_settings_controller.dart';
 import '../controllers/timer_controller.dart';
 import '../data/activities_storage.dart';
 import '../models/activity.dart';
+import '../models/app_settings.dart';
 import '../models/focus_state.dart';
 import '../models/timer_time_format.dart';
 
@@ -21,10 +23,12 @@ class TimerScreen extends StatefulWidget {
 
 class _TimerScreenState extends State<TimerScreen> {
   late final TimerController controller;
+  late final AppSettings appSettings;
 
   @override
   void initState() {
     super.initState();
+    appSettings = context.read<AppSettingsController>().settings;
     controller = TimerController(
       context,
       widget.activity,
@@ -43,6 +47,10 @@ class _TimerScreenState extends State<TimerScreen> {
     return AnimatedBuilder(
       animation: controller,
       builder: (context, _) {
+        final Color buttonColor = controller.session.currentFocusState == FocusState.focus
+            ? widget.activity.seedColor
+            : Theme.of(context).colorScheme.primary;
+
         return WillPopScope(
           onWillPop: () async {
             context.read<ActivitiesStorage>().updateActivity(
@@ -69,7 +77,7 @@ class _TimerScreenState extends State<TimerScreen> {
                           fontSize: 35,
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         formatTimeInHM(
                           controller.session.focusTimeElapsed,
@@ -77,7 +85,6 @@ class _TimerScreenState extends State<TimerScreen> {
                         ),
                         style: TextStyle(
                           fontSize: 35,
-                          // fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
@@ -126,31 +133,41 @@ class _TimerScreenState extends State<TimerScreen> {
                         color: widget.activity.seedColor,
                         segments:
                             controller.activity.timeGoal /
-                            controller.focusInterval,
+                            controller.appSettings.focusInterval,
                       ),
                     ],
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      controller.onButtonPressed();
-                    },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: controller.session.done
-                          ? Colors.transparent
-                          : (controller.session.currentFocusState ==
-                                    FocusState.focus
-                                ? widget.activity.seedColor
-                                : Theme.of(context).colorScheme.primary),
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(24),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        if (!controller.session.done)
+                          BoxShadow(
+                            color: buttonColor.withOpacity(0.3),
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          ),
+                      ],
                     ),
-                    child: Icon(
-                      controller.isRunning
-                          ? Icons.pause_rounded
-                          : Icons.play_arrow_rounded,
-                      color: controller.session.done
-                          ? Colors.transparent
-                          : Theme.of(context).colorScheme.onPrimary,
+                    child: FilledButton(
+                      onPressed: () {
+                        controller.onButtonPressed();
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: controller.session.done
+                            ? Colors.transparent
+                            : buttonColor,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(24),
+                      ),
+                      child: Icon(
+                        controller.isRunning
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
+                        color: controller.session.done
+                            ? Colors.transparent
+                            : Theme.of(context).colorScheme.onPrimary,
+                      ),
                     ),
                   ),
                 ],

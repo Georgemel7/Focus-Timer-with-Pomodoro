@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_timer/screens/home_screen.dart';
+import 'package:focus_timer/screens/settings_screen.dart';
 import 'package:focus_timer/screens/statistics_screen.dart';
 
 class AppRoot extends StatefulWidget {
@@ -28,6 +29,18 @@ class _AppRootState extends State<AppRoot> {
     PreferredSizeWidget? appBar;
     if (_selectedIndex == 0) {
       appBar = AppBar(
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsScreen()),
+              );
+            },
+            style: ElevatedButton.styleFrom(elevation: 0),
+            child: Icon(Icons.settings_rounded),
+          ),
+        ],
         bottom: const TabBar(
           tabs: <Tab>[
             Tab(text: 'Due Today'),

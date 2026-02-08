@@ -165,7 +165,7 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
                   const SizedBox(height: 8),
                   Slider(
                     value: controller.timeGoal.toDouble(),
-                    min: 5,
+                    min: 15,
                     max: 180,
                     divisions: (180 - 15) ~/ 5,
                     onChanged: (double value) {
