@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:focus_timer/screens/activity_creation_screen.dart';
-import 'package:provider/provider.dart';
-
-import '../data/activities_storage.dart';
 import '../models/activity.dart';
 import '../screens/timer_screen.dart';
 

@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_timer/app_root.dart';
+import 'package:focus_timer/services/notification_service.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
@@ -27,11 +28,19 @@ void main() async {
 
   final sessionsBox = await Hive.openBox<ActivitySession>('sessions');
 
+  final notificationService = NotificationService();
+  await notificationService.init();
+
+
   runApp(
+
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ActivitiesStorage()),
         ChangeNotifierProvider(create: (context) => AppSettingsController()),
+        Provider<NotificationService>(
+          create: (_) => notificationService,
+        ),
       ],
       child: const MyApp(),
     ),

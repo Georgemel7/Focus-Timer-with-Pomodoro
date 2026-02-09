@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
 
 import '../models/activity.dart';
 import '../models/activity_session.dart';

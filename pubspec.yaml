@@ -39,6 +39,7 @@ dependencies:
   hive:
   hive_flutter:
   path_provider: ^2.0.15
+  flutter_local_notifications:
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

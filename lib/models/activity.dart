@@ -18,7 +18,6 @@ class Activity {
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'weekday.dart';
-import 'activity_session.dart';
 
 part '../hive_adapters/activity.g.dart';
 

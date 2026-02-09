@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_timer/data/activities_storage.dart';
 import 'package:hive/hive.dart';
