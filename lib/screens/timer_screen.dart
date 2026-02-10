@@ -67,7 +67,7 @@ class _TimerScreenState extends State<TimerScreen> {
               widget.activity,
               widget.activity,
             );
-            controller.saveSession();
+            controller.pause();
             Navigator.pop(context);
             return true;
           },
@@ -80,20 +80,6 @@ class _TimerScreenState extends State<TimerScreen> {
                   Stack(
                     alignment: Alignment.center,
                     children: [
-                      /*Container(
-                width: 6,
-                height: 0.001,
-              decoration: BoxDecoration(
-                color: widget.activity.seedColor.withOpacity(0.07),
-                borderRadius: BorderRadius.circular(32),
-                boxShadow: [
-                  BoxShadow(
-                    color: widget.activity.seedColor.withOpacity(0.05),
-                    blurRadius: 60,
-                    spreadRadius: 80,
-                  ),
-                ],
-              ),),*/
                       Column(
                         children: [
                           Text(
@@ -107,7 +93,7 @@ class _TimerScreenState extends State<TimerScreen> {
                           const SizedBox(height: 20),
                           Text(
                             formatTimeInHM(
-                              controller.session.focusTimeElapsed,
+                              controller.session.focusTimeElapsed + controller.session.totalFocusTime,
                               controller.activity.timeGoal,
                             ),
                             style: TextStyle(

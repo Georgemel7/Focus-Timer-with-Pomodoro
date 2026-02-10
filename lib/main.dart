@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'controllers/app_settings_controller.dart';
 import 'data/activities_storage.dart';
-import 'data/sessions_storage.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
 import 'hive_adapters/focus_state_adapter.dart';
 import 'hive_adapters/weekday_adapter.dart';
 import 'models/activity.dart';
@@ -16,6 +16,7 @@ import 'models/activity_session.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tzdata.initializeTimeZones();
   await Hive.initFlutter();
 
   Hive.registerAdapter(ActivityAdapter());

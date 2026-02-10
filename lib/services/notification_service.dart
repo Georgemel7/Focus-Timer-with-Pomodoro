@@ -1,11 +1,12 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
 
-  int currentFocusId = 0;
-  int currentBreakId = 0;
+  int _currentId = 0;
+  int nextId() => _currentId++;
 
   static const String focusChannel = 'timer_focus_channel';
   static const String breakChannel = 'timer_break_channel';
@@ -50,11 +51,13 @@ class NotificationService {
         );
   }
 
-  Future<void> playFocusEnd() async {
-    await _plugin.show(
-      id: currentFocusId++,
+  Future<void> scheduleFocusEndNotification(tz.TZDateTime time) async {
+    try {await _plugin.zonedSchedule(
+      id: nextId(),
       title: 'Focus Timer',
       body: 'The focus interval is over!',
+      scheduledDate: time,
+      androidScheduleMode: AndroidScheduleMode.inexact,
       notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           focusChannel,
@@ -63,12 +66,16 @@ class NotificationService {
           priority: Priority.high,
         ),
       ),
-    );
+    );} catch (e) {
+      print(e);
+    };
   }
 
-  Future<void> playBreakEnd() async {
-    await _plugin.show(
-      id: currentBreakId++,
+  Future<void> scheduleBreakEndNotification(tz.TZDateTime time) async {
+    try {await _plugin.zonedSchedule(
+      scheduledDate: time,
+      androidScheduleMode: AndroidScheduleMode.inexact,
+      id: nextId(),
       title: 'Focus Timer',
       body: 'The break is over!',
       notificationDetails: NotificationDetails(
@@ -79,6 +86,12 @@ class NotificationService {
           priority: Priority.high,
         ),
       ),
-    );
+    );} catch (e) {
+      print(e);
+    };
+  }
+
+  Future<void> cancelNotifications() async {
+    await _plugin.cancelAll();
   }
 }

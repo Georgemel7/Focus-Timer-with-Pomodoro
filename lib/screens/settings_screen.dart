@@ -19,9 +19,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     final appSettings = context.read<AppSettingsController>();
     _focusController =
-        TextEditingController(text: (appSettings.focusInterval/60).toString());
+        TextEditingController(text: (appSettings.focusInterval~/60).toString());
     _breakController =
-        TextEditingController(text: (appSettings.breakInterval/60).toString());
+        TextEditingController(text: (appSettings.breakInterval~/60).toString());
   }
 
   @override

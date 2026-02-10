@@ -2,7 +2,6 @@ import 'package:focus_timer/models/weekday.dart';
 import 'package:hive_flutter/adapters.dart'
     show TypeAdapter, BinaryReader, BinaryWriter;
 
-import '../models/focus_state.dart';
 
 class WeekdayAdapter extends TypeAdapter<Weekday> {
   @override

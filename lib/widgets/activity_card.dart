@@ -91,7 +91,7 @@ class ActivityCard extends StatelessWidget {
                       ),
                       Text(
                         formatTimeInHM(
-                          session.focusTimeElapsed,
+                          (session.focusTimeElapsed + session.totalFocusTime),
                           activity.timeGoal,
                         ),
                         style: TextStyle(
@@ -106,7 +106,7 @@ class ActivityCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                               child: LinearProgressIndicator(
                                 value:
-                                    (session.focusTimeElapsed /
+                                    ((session.focusTimeElapsed + session.totalFocusTime) /
                                             activity.timeGoal)
                                         .clamp(0, 1),
                                 backgroundColor: cardColorScheme.outlineVariant,
@@ -118,7 +118,7 @@ class ActivityCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${(session.focusTimeElapsed / activity.timeGoal * 100).toInt()}%',
+                            '${((session.totalFocusTime + session.focusTimeElapsed) / activity.timeGoal * 100).toInt()}%',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 11,

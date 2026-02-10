@@ -30,18 +30,22 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
   ];
   late final ActivityEditController controller;
   late final TextEditingController _textEditingController;
+  late final TextEditingController _timeGoalController;
 
   @override
   void initState() {
     super.initState();
     controller = ActivityEditController(widget.activity);
     _textEditingController = TextEditingController(text: controller.label);
+    _timeGoalController =
+        TextEditingController(text: controller.timeGoal.toString());
   }
 
   @override
   void dispose() {
     controller.dispose();
     _textEditingController.dispose();
+    _timeGoalController.dispose();
     super.dispose();
   }
 
@@ -147,7 +151,7 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
                   Row(
                     children: [
                       Text(
-                        'Time Goal',
+                        'Time Goal (min)',
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(
                               color: Theme.of(
@@ -156,23 +160,25 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
                             ),
                       ),
                       const Spacer(),
-                      Text(
-                        '${controller.timeGoal.round()} min',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      SizedBox(
+                        width: 100,
+                        child: TextField(
+                          controller: _timeGoalController,
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            final minutes = int.tryParse(value);
+                            if (minutes != null) {
+                              controller.setTimeGoal(minutes);
+                            }
+                          },
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor:
+                                Theme.of(context).colorScheme.surfaceContainer,
+                          ),
+                        ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 8),
-                  Slider(
-                    value: controller.timeGoal.toDouble(),
-                    min: 15,
-                    max: 180,
-                    divisions: (180 - 15) ~/ 5,
-                    onChanged: (double value) {
-                      setState(() {
-                        controller.timeGoal = value.toInt();
-                      });
-                    },
                   ),
                 ],
               ),
@@ -199,13 +205,13 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
                               backgroundColor: Colors.red,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                             ),
-                            child: Icon(Icons.delete_forever_rounded),
+                            child: const Icon(Icons.delete_forever_rounded),
                           ),
                         )
-                      : SizedBox(width: 0),
+                      : const SizedBox(width: 0),
                   widget.activity != null
                       ? const SizedBox(width: 12)
-                      : SizedBox(width: 0),
+                      : const SizedBox(width: 0),
                   Expanded(
                     flex: 4,
                     child: FilledButton(

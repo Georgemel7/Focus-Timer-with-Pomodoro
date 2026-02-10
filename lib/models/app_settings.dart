@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 
 class AppSettings {
   final int focusInterval; // seconds

@@ -13,28 +13,43 @@ class ActivitySession extends HiveObject {
   DateTime day;
 
   @HiveField(2)
-  int focusTimeElapsed;
-
-  @HiveField(3)
-  int breakTimeElapsed;
-
-  @HiveField(4)
   FocusState currentFocusState;
 
+  @HiveField(3)
+  bool done;
+
+  @HiveField(4)
+  DateTime? breakStartedAt;
+
   @HiveField(5)
-  int numOfIntervals;
+  DateTime? focusStartedAt;
 
   @HiveField(6)
-  bool done;
+  int totalFocusTime;
+
+  @HiveField(7)
+  int totalBreakTime;
+
+  int get focusTimeElapsed {
+    if(currentFocusState != FocusState.focus) return 0;
+    if(focusStartedAt == null) return 0;
+    return DateTime.now().difference(focusStartedAt!).inSeconds;
+  }
+
+  int get breakTimeElapsed {
+    if(currentFocusState != FocusState.break_) return 0;
+    if(breakStartedAt == null) return 0;
+    return DateTime.now().difference(breakStartedAt!).inSeconds;
+  }
+
 
   ActivitySession({
     required this.activityId,
     required this.day,
     this.done = false,
 
-    this.focusTimeElapsed = 0,
-    this.breakTimeElapsed = 0,
     this.currentFocusState = FocusState.focus,
-    this.numOfIntervals = 0,
+    this.totalFocusTime = 0,
+    this.totalBreakTime = 0,
   });
 }

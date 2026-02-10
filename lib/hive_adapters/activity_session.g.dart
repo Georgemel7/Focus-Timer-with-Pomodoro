@@ -19,32 +19,35 @@ class ActivitySessionAdapter extends TypeAdapter<ActivitySession> {
     return ActivitySession(
       activityId: fields[0] as String,
       day: fields[1] as DateTime,
-      done: fields[6] as bool,
-      focusTimeElapsed: fields[2] as int,
-      breakTimeElapsed: fields[3] as int,
-      currentFocusState: fields[4] as FocusState,
-      numOfIntervals: fields[5] as int,
-    );
+      done: fields[3] as bool,
+      currentFocusState: fields[2] as FocusState,
+      totalFocusTime: fields[6] as int,
+      totalBreakTime: fields[7] as int,
+    )
+      ..breakStartedAt = fields[4] as DateTime?
+      ..focusStartedAt = fields[5] as DateTime?;
   }
 
   @override
   void write(BinaryWriter writer, ActivitySession obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.activityId)
       ..writeByte(1)
       ..write(obj.day)
       ..writeByte(2)
-      ..write(obj.focusTimeElapsed)
-      ..writeByte(3)
-      ..write(obj.breakTimeElapsed)
-      ..writeByte(4)
       ..write(obj.currentFocusState)
+      ..writeByte(3)
+      ..write(obj.done)
+      ..writeByte(4)
+      ..write(obj.breakStartedAt)
       ..writeByte(5)
-      ..write(obj.numOfIntervals)
+      ..write(obj.focusStartedAt)
       ..writeByte(6)
-      ..write(obj.done);
+      ..write(obj.totalFocusTime)
+      ..writeByte(7)
+      ..write(obj.totalBreakTime);
   }
 
   @override
