@@ -41,6 +41,8 @@ dependencies:
   path_provider: ^2.0.15
   flutter_local_notifications:
   timezone:
+  shared_preferences:
+
 
 dev_dependencies:
   flutter_test:

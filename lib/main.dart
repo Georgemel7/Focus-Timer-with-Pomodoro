@@ -5,6 +5,7 @@ import 'package:focus_timer/services/notification_service.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'controllers/app_settings_controller.dart';
 import 'data/activities_storage.dart';
@@ -29,6 +30,8 @@ void main() async {
 
   final sessionsBox = await Hive.openBox<ActivitySession>('sessions');
 
+  final prefs = await SharedPreferences.getInstance();
+
   final notificationService = NotificationService();
   await notificationService.init();
 
@@ -38,7 +41,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ActivitiesStorage()),
-        ChangeNotifierProvider(create: (context) => AppSettingsController()),
+        ChangeNotifierProvider(create: (context) => AppSettingsController(prefs: prefs)),
         Provider<NotificationService>(
           create: (_) => notificationService,
         ),
