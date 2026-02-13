@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../controllers/activity_edit_controller.dart';
-import '../models/activity.dart';
-import '../models/weekday.dart';
+import '../../controllers/activity_edit_controller.dart';
+import '../../data/sessions_storage.dart';
+import '../../models/activity.dart';
+import '../../models/weekday.dart';
+
 
 class ActivityCreationScreen extends StatefulWidget {
   const ActivityCreationScreen(this.activity, {super.key});
@@ -31,11 +34,13 @@ class _ActivityCreationScreenState extends State<ActivityCreationScreen> {
   late final ActivityEditController controller;
   late final TextEditingController _textEditingController;
   late final TextEditingController _timeGoalController;
+  late final SessionsStorage sessionsStorage = context.read<SessionsStorage>();
+
 
   @override
   void initState() {
     super.initState();
-    controller = ActivityEditController(widget.activity);
+    controller = ActivityEditController(widget.activity, sessionsStorage);
     _textEditingController = TextEditingController(text: controller.label);
     _timeGoalController =
         TextEditingController(text: controller.timeGoal.toString());

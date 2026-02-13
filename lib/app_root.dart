@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:focus_timer/screens/home_screen.dart';
-import 'package:focus_timer/screens/settings_screen.dart';
-import 'package:focus_timer/screens/statistics_screen.dart';
+
+import 'UI/screens/home_screen.dart';
+import 'UI/screens/settings_screen.dart';
+import 'UI/screens/statistics_screens/statistics_screen.dart';
 
 class AppRoot extends StatefulWidget {
   const AppRoot({super.key});
@@ -50,7 +51,15 @@ class _AppRootState extends State<AppRoot> {
         title: const Text('Foсus Timer'),
       );
     } else {
-      appBar = AppBar(title: const Text('Statistics'));
+      appBar = AppBar(
+        title: const Text('Statistics'),
+        bottom: const TabBar(
+          tabs: <Tab>[
+            Tab(text: 'Month'),
+            Tab(text: 'Week'),
+          ],
+        ),
+      );
     }
 
     return DefaultTabController(

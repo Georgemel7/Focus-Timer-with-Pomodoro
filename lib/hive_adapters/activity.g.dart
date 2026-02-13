@@ -22,13 +22,14 @@ class ActivityAdapter extends TypeAdapter<Activity> {
       timeGoal: fields[3] as int,
       activeDays: (fields[4] as List).cast<Weekday>(),
       id: fields[0] as String,
-    );
+      createdAt: fields[6] as DateTime,
+    )..deletedAt = fields[5] as DateTime?;
   }
 
   @override
   void write(BinaryWriter writer, Activity obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,11 @@ class ActivityAdapter extends TypeAdapter<Activity> {
       ..writeByte(3)
       ..write(obj.timeGoal)
       ..writeByte(4)
-      ..write(obj.activeDays);
+      ..write(obj.activeDays)
+      ..writeByte(5)
+      ..write(obj.deletedAt)
+      ..writeByte(6)
+      ..write(obj.createdAt);
   }
 
   @override

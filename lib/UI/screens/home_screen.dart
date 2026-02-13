@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_timer/models/weekday.dart';
 import 'package:provider/provider.dart';
 
-import '../data/activities_storage.dart';
+import '../../data/activities_storage.dart';
 import '../widgets/activity_card.dart';
 import 'activity_creation_screen.dart';
 
@@ -14,8 +14,8 @@ class HomeScreen extends StatelessWidget {
     final activitiesStorage = context.watch<ActivitiesStorage>();
     final brightness = Theme.of(context).brightness;
     final today = Weekday.values[DateTime.now().weekday - 1];
-    final dueTodayActivities = activitiesStorage.getActivitiesByWeekday(today);
-    final allActivities = activitiesStorage.getAllActivities();
+    final dueTodayActivities = activitiesStorage.getActiveActivitiesByWeekday(today);
+    final allActivities = activitiesStorage.getAllActiveActivities();
 
     return Scaffold(
       body: TabBarView(

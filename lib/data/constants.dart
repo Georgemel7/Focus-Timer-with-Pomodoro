@@ -1,1 +1,1 @@
-
+const double defPadding = 10;

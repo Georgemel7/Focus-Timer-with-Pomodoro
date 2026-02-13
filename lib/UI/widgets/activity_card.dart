@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:focus_timer/data/sessions_storage.dart';
 import 'package:focus_timer/models/activity.dart';
 import 'package:focus_timer/models/activity_session.dart';
+import 'package:focus_timer/models/weekday.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
-import '../controllers/activity_controller.dart';
-import '../models/timer_time_format.dart';
+import '../../controllers/activity_controller.dart';
+import '../../models/timer_time_format.dart';
+
 
 class ActivityCard extends StatelessWidget {
   ActivityCard({
@@ -17,12 +20,28 @@ class ActivityCard extends StatelessWidget {
   final Activity activity;
   final ColorScheme cardColorScheme;
 
-  late final ActivitySession session = SessionsStorage(
-    Hive.box('sessions'),
-  ).getTodaySession(activity);
 
   @override
   Widget build(BuildContext context) {
+
+    late final ActivitySession? session;
+
+    bool isActiveToday() {
+      final today = DateTime.now().weekday-1;
+      for(int i = 0; i < activity.activeDays.length; i++) {
+        if(Weekday.values.indexOf(activity.activeDays[i]) == today) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    if(isActiveToday()) {
+      session = context.read<SessionsStorage>().getTodaySession(activity);
+    } else {
+      session = ActivitySession(activityId: activity.id, day: DateTime.now());
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       clipBehavior: Clip.antiAlias,
@@ -48,16 +67,16 @@ class ActivityCard extends StatelessWidget {
                 flex: 1,
                 child: InkWell(
                   onTap: () {
-                    session.done ? (){} : ActivityController().goToTimer(context, activity);
+                    session!.done || !isActiveToday() ? (){} : ActivityController().goToTimer(context, activity);
                   },
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: session.done
+                      color: session.done || !isActiveToday()
                           ? cardColorScheme.outlineVariant
                           : cardColorScheme.primary,
                     ),
-                    child: session.done
+                    child: session.done || !isActiveToday()
                         ? Icon(
                             Icons.check_rounded,
                             color: cardColorScheme.primary,

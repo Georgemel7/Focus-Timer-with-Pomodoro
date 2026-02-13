@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:focus_timer/data/sessions_storage.dart';
-import 'package:focus_timer/widgets/pomodoro_progress_indicator.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
+import '../../controllers/app_settings_controller.dart';
+import '../../controllers/timer_controller.dart';
+import '../../data/activities_storage.dart';
+import '../../models/activity.dart';
+import '../../models/app_settings.dart';
+import '../../models/focus_state.dart';
+import '../../models/timer_time_format.dart';
+import '../../services/notification_service.dart';
 import '../alert_dialogs/activity_done_dialog.dart';
-import '../controllers/app_settings_controller.dart';
-import '../controllers/timer_controller.dart';
-import '../data/activities_storage.dart';
-import '../models/activity.dart';
-import '../models/app_settings.dart';
-import '../models/focus_state.dart';
-import '../models/timer_time_format.dart';
-import '../services/notification_service.dart';
+import '../widgets/pomodoro_progress_indicator.dart';
 
 class TimerScreen extends StatefulWidget {
   const TimerScreen(this.activity, {super.key});
@@ -35,7 +35,7 @@ class _TimerScreenState extends State<TimerScreen> {
       appSettings: appSettings,
       notificationService: context.read<NotificationService>(),
       activity: widget.activity,
-      sessionsStorage: SessionsStorage(Hive.box('sessions')),
+      sessionsStorage: context.read<SessionsStorage>(),
       onSessionFinished: () {
         Navigator.push(
           context,

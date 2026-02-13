@@ -15,7 +15,10 @@ class ActivityEditController extends ChangeNotifier {
   late int timeGoal;
   late List<Weekday> activeDays;
 
-  ActivityEditController(this.activity) {
+  final SessionsStorage sessionsStorage;
+
+
+  ActivityEditController(this.activity, this.sessionsStorage) {
     label = activity?.label ?? '';
     seedColor = activity?.seedColor ?? Colors.blue;
     timeGoal = (activity?.timeGoal ?? 60 * 60) ~/ 60; //from seconds to minutes
@@ -49,7 +52,7 @@ class ActivityEditController extends ChangeNotifier {
   void save(BuildContext context) {
     if (activity != null) {
       if (timeGoal > activity!.timeGoal) {
-        SessionsStorage(Hive.box('sessions')).getTodaySession(activity!).done =
+        sessionsStorage.getTodaySession(activity!).done =
             false;
       }
       context.read<ActivitiesStorage>().updateActivity(
@@ -60,6 +63,7 @@ class ActivityEditController extends ChangeNotifier {
           label: label,
           timeGoal: timeGoal * 60,
           activeDays: activeDays,
+          createdAt: activity!.createdAt,
         ),
       );
     } else {
@@ -70,6 +74,7 @@ class ActivityEditController extends ChangeNotifier {
           label: label,
           timeGoal: timeGoal * 60,
           activeDays: activeDays,
+          createdAt: DateTime.now(),
         ),
       );
     }

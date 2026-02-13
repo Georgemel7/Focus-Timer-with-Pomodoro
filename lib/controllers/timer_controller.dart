@@ -50,7 +50,7 @@ class TimerController extends ChangeNotifier {
       return appSettings.focusInterval;
     } else {
       if (activity.timeGoal - session.totalFocusTime < appSettings.focusInterval) {
-        return lastIntervalDuration - session.totalFocusTime % appSettings.focusInterval;
+        return lastIntervalDuration ==0 ? appSettings.focusInterval - session.totalFocusTime % appSettings.focusInterval : lastIntervalDuration - session.totalFocusTime % appSettings.focusInterval;
       }
       return appSettings.focusInterval - session.totalFocusTime % appSettings.focusInterval;
     }

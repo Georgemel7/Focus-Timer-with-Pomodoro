@@ -8,3 +8,7 @@ String formatTimeInMS(int timeElapsed, int timeGoal) {
   int seconds = time % 60;
   return '${minutes < 10 ? '0$minutes' : minutes} : ${seconds < 10 ? '0$seconds' : seconds}';
 }
+
+String formatOneTimeInHM(int timeInSeconds) {
+  return '${timeInSeconds ~/ 60 ~/ 60}h ${timeInSeconds ~/ 60 % 60}m';
+}

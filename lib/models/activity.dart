@@ -38,11 +38,19 @@ class Activity extends HiveObject {
   @HiveField(4)
   List<Weekday> activeDays;
 
+  @HiveField(5)
+  DateTime? deletedAt;
+
+  @HiveField(6)
+  DateTime createdAt;
+
+
   Activity({
     required this.seedColor,
     required this.label,
     required this.timeGoal,
     required this.activeDays,
     required this.id,
+    required this.createdAt,
   });
 }

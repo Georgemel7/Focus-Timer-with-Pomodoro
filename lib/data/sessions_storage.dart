@@ -1,12 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 import '../models/activity.dart';
 import '../models/activity_session.dart';
 
-class SessionsStorage {
-  final Box<ActivitySession> _box;
+class SessionsStorage extends ChangeNotifier {
+  final Box<ActivitySession> _box = Hive.box<ActivitySession>('sessions');
 
-  SessionsStorage(this._box);
+  SessionsStorage();
 
   List<ActivitySession> getAllSessions() {
     return List.unmodifiable(_box.values.toList());
@@ -32,5 +33,20 @@ class SessionsStorage {
         return session;
       },
     );
+  }
+
+  Map<String, ActivitySession> getSessionsByDay(DateTime day) {
+    final normalized = DateTime(day.year, day.month, day.day);
+
+    Map<String, ActivitySession> sessions = <String, ActivitySession>{};
+    for (final session in _box.values) {
+      if (session.day == normalized) {
+        sessions[session.activityId] = session;
+      }
+    }
+    if (sessions.isEmpty) {
+      return {};
+    }
+    return sessions;
   }
 }

@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import 'package:focus_timer/UI/widgets/pomodoro_progress_indicator.dart';
+import 'package:focus_timer/data/constants.dart';
+import 'package:focus_timer/models/progress_comparison.dart';
+import 'package:focus_timer/models/timer_time_format.dart';
+
+class OverallProgress extends StatelessWidget {
+  final ProgressComparison progressComparison;
+
+  const OverallProgress({
+    required this.progressComparison,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                '${(progressComparison.progress * 100).toInt()}%',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              ),
+              AspectRatio(
+                aspectRatio: 1,
+                child: PomodoroProgressIndicator(
+                  progress: 1 - progressComparison.progress,
+                  color: Theme.of(context).colorScheme.primary,
+                  segments: 1 - progressComparison.progress,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(width: defPadding * 3),
+        Expanded(
+          flex: 4,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Total ${formatOneTimeInHM(progressComparison.totalFocusTime)} spent focusing',
+                style: TextStyle(fontSize: 25),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  progressComparison.trend == Trend.up
+                      ? Icon(Icons.arrow_upward_rounded)
+                      : (progressComparison.trend == Trend.down
+                            ? Icon(Icons.arrow_downward_rounded)
+                            : Icon(Icons.equalizer)),
+                  Text('${(progressComparison.percentDiff).abs()*100}% then previous'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

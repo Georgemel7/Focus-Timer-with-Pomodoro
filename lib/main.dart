@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_timer/app_root.dart';
+import 'package:focus_timer/data/sessions_storage.dart';
 import 'package:focus_timer/services/notification_service.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -41,6 +42,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ActivitiesStorage()),
+        ChangeNotifierProvider(create: (context) => SessionsStorage()),
         ChangeNotifierProvider(create: (context) => AppSettingsController(prefs: prefs)),
         Provider<NotificationService>(
           create: (_) => notificationService,
