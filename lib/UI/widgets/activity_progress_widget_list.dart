@@ -16,14 +16,14 @@ class ActivityProgressWidgetList extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                flex: 1,
+                flex: 3,
                 child: Text(
                   activityPr.label,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 6,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: LinearProgressIndicator(
@@ -34,9 +34,12 @@ class ActivityProgressWidgetList extends StatelessWidget {
                 ),
               ),
               SizedBox(width: defPadding/2),
-              Text(
-                '${(activityPr.progress * 100).toInt()}%',
-                style: Theme.of(context).textTheme.bodyMedium,
+              Expanded(
+                flex: 1,
+                child: Text(
+                  '${(activityPr.progress * 100).toInt()}%',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               )
             ],
           ),
