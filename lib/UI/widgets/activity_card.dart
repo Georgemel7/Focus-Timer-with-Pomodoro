@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_timer/data/sessions_storage.dart';
 import 'package:focus_timer/models/activity.dart';
 import 'package:focus_timer/models/activity_session.dart';
-import 'package:focus_timer/models/weekday.dart';
+import 'package:focus_timer/models/weekday_and_month.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 

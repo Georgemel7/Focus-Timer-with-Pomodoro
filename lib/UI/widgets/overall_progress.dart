@@ -7,9 +7,7 @@ import 'package:focus_timer/models/timer_time_format.dart';
 class OverallProgress extends StatelessWidget {
   final ProgressComparison progressComparison;
 
-  const OverallProgress({
-    required this.progressComparison,
-  });
+  const OverallProgress({required this.progressComparison});
 
   @override
   Widget build(BuildContext context) {
@@ -42,18 +40,26 @@ class OverallProgress extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Total ${formatOneTimeInHM(progressComparison.totalFocusTime)} spent focusing',
-                style: TextStyle(fontSize: 25),
+                'Total ${formatOneTimeInHM(progressComparison.totalFocusTime)} spent focusing this month',
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               SizedBox(height: 10),
               Row(
                 children: [
                   progressComparison.trend == Trend.up
-                      ? Icon(Icons.arrow_upward_rounded)
+                      ? Icon(Icons.arrow_upward_rounded, color: Colors.green)
                       : (progressComparison.trend == Trend.down
                             ? Icon(Icons.arrow_downward_rounded)
                             : Icon(Icons.equalizer)),
-                  Text('${(progressComparison.percentDiff).abs()*100}% then previous'),
+                  Text(
+                    '${((progressComparison.percentDiff.abs() > 1 ? '∞' : progressComparison.percentDiff.abs().toInt() * 100))}% then previous',
+                    style: TextStyle(
+                      color: progressComparison.trend == Trend.up
+                          ? Colors.green
+                          : progressComparison.trend == Trend.down
+                                ? Colors.red : Colors.grey,
+                    ),
+                  ),
                 ],
               ),
             ],

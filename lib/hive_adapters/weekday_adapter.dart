@@ -1,4 +1,4 @@
-import 'package:focus_timer/models/weekday.dart';
+import 'package:focus_timer/models/weekday_and_month.dart';
 import 'package:hive_flutter/adapters.dart'
     show TypeAdapter, BinaryReader, BinaryWriter;
 

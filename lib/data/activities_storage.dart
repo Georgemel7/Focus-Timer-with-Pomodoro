@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_timer/models/activity.dart';
-import 'package:focus_timer/models/weekday.dart';
+import 'package:focus_timer/models/weekday_and_month.dart';
 import 'package:hive/hive.dart';
 
 class ActivitiesStorage extends ChangeNotifier {

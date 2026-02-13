@@ -1,6 +1,6 @@
 import 'package:focus_timer/models/period_handler.dart';
 import 'package:focus_timer/models/stats.dart';
-import 'package:focus_timer/models/weekday.dart';
+import 'package:focus_timer/models/weekday_and_month.dart';
 
 import '../data/sessions_storage.dart';
 import 'activity_session.dart';

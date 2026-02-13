@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../controllers/stats_controller.dart';
+import '../../models/weekday_and_month.dart';
 
 class PeriodChanger extends StatelessWidget {
 
@@ -23,7 +24,7 @@ class PeriodChanger extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
         Text(
-          controller.period.toString()
+          '${months[controller.period.month]} ${controller.period.year == DateTime.now().year ? '' : '${controller.period.year}'}',
         ),
         IconButton(
           onPressed: () {

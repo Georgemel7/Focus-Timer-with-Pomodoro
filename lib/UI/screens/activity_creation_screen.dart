@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../controllers/activity_edit_controller.dart';
 import '../../data/sessions_storage.dart';
 import '../../models/activity.dart';
-import '../../models/weekday.dart';
+import '../../models/weekday_and_month.dart';
 
 
 class ActivityCreationScreen extends StatefulWidget {

@@ -1,0 +1,3 @@
+enum Weekday { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
+
+const List<String> months = ['-1', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

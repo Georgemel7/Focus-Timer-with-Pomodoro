@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focus_timer/models/weekday.dart';
+import 'package:focus_timer/models/weekday_and_month.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/activities_storage.dart';
