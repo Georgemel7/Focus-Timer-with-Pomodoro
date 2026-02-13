@@ -5,9 +5,13 @@ class Stats {
   Map<DateTime, int> focusByDay;
   Map<DateTime, int> timeGoalByDay;
 
-  int get totalFocusTime => totalFocusByActivity.values.reduce((a, b) => a + b);
-  int get totalTimeGoalTime =>
-      totalTimeGoalByActivity.values.reduce((a, b) => a + b);
+  int get totalFocusTime => totalFocusByActivity.values.isEmpty
+      ? 0
+      : totalFocusByActivity.values.reduce((a, b) => a + b);
+
+  int get totalTimeGoalTime => totalTimeGoalByActivity.values.isEmpty
+      ? 0
+      : totalTimeGoalByActivity.values.reduce((a, b) => a + b);
 
   Stats({
     required this.totalFocusByActivity,
