@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import '../../controllers/activity_controller.dart';
 import '../../models/timer_time_format.dart';
 
-
 class ActivityCard extends StatelessWidget {
   ActivityCard({
     super.key,
@@ -20,26 +19,36 @@ class ActivityCard extends StatelessWidget {
   final Activity activity;
   final ColorScheme cardColorScheme;
 
-
   @override
   Widget build(BuildContext context) {
-
     late final ActivitySession? session;
 
     bool isActiveToday() {
-      final today = DateTime.now().weekday-1;
-      for(int i = 0; i < activity.activeDays.length; i++) {
-        if(Weekday.values.indexOf(activity.activeDays[i]) == today) {
+      final today = DateTime.now().weekday - 1;
+      for (int i = 0; i < activity.activeDays.length; i++) {
+        if (Weekday.values.indexOf(activity.activeDays[i]) == today) {
           return true;
         }
       }
       return false;
     }
 
-    if(isActiveToday()) {
+    if (isActiveToday()) {
       session = context.read<SessionsStorage>().getTodaySession(activity);
     } else {
       session = ActivitySession(activityId: activity.id, day: DateTime.now());
+    }
+
+    String activeDaysFormatted () {
+      String _days = '';
+      for (int i = 0; i < activity.activeDays.length; i++) {
+        if (i>0) {
+          _days += ', ${days[Weekday.values.indexOf(activity.activeDays[i])]}';
+        } else {
+          _days += days[Weekday.values.indexOf(activity.activeDays[i])];
+        }
+      }
+      return _days;
     }
 
     return Container(
@@ -67,7 +76,9 @@ class ActivityCard extends StatelessWidget {
                 flex: 1,
                 child: InkWell(
                   onTap: () {
-                    session!.done || !isActiveToday() ? (){} : ActivityController().goToTimer(context, activity);
+                    session!.done || !isActiveToday()
+                        ? () {}
+                        : ActivityController().goToTimer(context, activity);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -76,11 +87,26 @@ class ActivityCard extends StatelessWidget {
                           ? cardColorScheme.outlineVariant
                           : cardColorScheme.primary,
                     ),
-                    child: session.done || !isActiveToday()
+                    child: session.done
                         ? Icon(
                             Icons.check_rounded,
                             color: cardColorScheme.primary,
                             size: 35,
+                          )
+                        : !isActiveToday()
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                "isn't on duty today",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: cardColorScheme.primary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           )
                         : Icon(
                             Icons.play_arrow_rounded,
@@ -109,10 +135,11 @@ class ActivityCard extends StatelessWidget {
                         ),
                       ),
                       Text(
+                        isActiveToday() ?
                         formatTimeInHM(
                           (session.focusTimeElapsed + session.totalFocusTime),
                           activity.timeGoal,
-                        ),
+                        ) : activeDaysFormatted(),
                         style: TextStyle(
                           color: cardColorScheme.onSurfaceVariant,
                         ),
@@ -125,7 +152,8 @@ class ActivityCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                               child: LinearProgressIndicator(
                                 value:
-                                    ((session.focusTimeElapsed + session.totalFocusTime) /
+                                    ((session.focusTimeElapsed +
+                                                session.totalFocusTime) /
                                             activity.timeGoal)
                                         .clamp(0, 1),
                                 backgroundColor: cardColorScheme.outlineVariant,
@@ -137,7 +165,8 @@ class ActivityCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${((session.totalFocusTime + session.focusTimeElapsed) / activity.timeGoal * 100).toInt()}%',
+                            isActiveToday() ?
+                            '${((session.totalFocusTime + session.focusTimeElapsed) / activity.timeGoal * 100).toInt()}%' : '',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
